@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Coffee } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import Navbar from '../components/Navbar';
-import { Coffee } from 'lucide-react';
+import { searchShops } from '../api/api';
 import styles from './Home.module.css';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSearchClick = (query: string) => {
-    setSearchQuery(query);
+  const handleSearchClick = async (query: string) => {
+    try {
+      setIsSearching(true);
+      const response = await searchShops(query);
+      
+      if (response.data && response.data.length > 0) {
+        // For now, navigate to the first shop found
+        navigate(`/shop/${response.data[0].id}`);
+      }
+    } catch (error) {
+      console.error('Search failed:', error);
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   return (
@@ -17,14 +32,11 @@ const Home = () => {
       <Navbar />
       <main className={styles.main}>
         <div className={styles.backgroundImage} />
-        
         <div className={styles.content}>
           <div className={styles.contentInner}>
             <div className={styles.titleContainer}>
               <Coffee className="h-12 w-12" />
-              <h1 className={styles.title}>
-                GO'SPRO
-              </h1>
+              <h1 className={styles.title}>GO'SPRO</h1>
             </div>
             
             <h2 className={styles.subtitle}>
@@ -35,14 +47,13 @@ const Home = () => {
               value={searchTerm} 
               onChange={setSearchTerm} 
               onSearch={handleSearchClick}
+              isSearching={isSearching}
             />
             
             <p className={styles.tagline}>
               some espresso for my depresso
             </p>
           </div>
-
-          <div className={styles.decorativeGradient} />
         </div>
       </main>
     </div>
