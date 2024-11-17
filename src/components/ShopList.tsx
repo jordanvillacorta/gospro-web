@@ -17,9 +17,9 @@ const ShopList: React.FC<ShopListProps> = ({ shops }) => {
 
   const renderPriceRange = (range: string) => {
     return range.split('').map((_, i) => (
-      <DollarSign 
-        key={i} 
-        size={16} 
+      <DollarSign
+        key={i}
+        size={16}
         className={styles.priceIcon}
       />
     ));
@@ -47,15 +47,11 @@ const ShopList: React.FC<ShopListProps> = ({ shops }) => {
               alt={shop.name}
               className={styles.shopImage}
             />
-            <div className={styles.rating}>
-              <Star size={16} className={styles.starIcon} />
-              <span>{shop.rating}</span>
-            </div>
           </div>
 
           <div className={styles.content}>
             <h3 className={styles.name}>{shop.name}</h3>
-            
+
             <div className={styles.location}>
               <MapPin size={16} />
               <span>{shop.city}, {shop.state}</span>

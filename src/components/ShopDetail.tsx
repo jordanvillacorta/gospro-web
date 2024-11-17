@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Heart, Clock, Phone, Globe, Mail, Coffee, Wifi, CreditCard, MapPin, Loader } from 'lucide-react';
+import { Heart, Clock, Phone, Globe, Mail, Coffee, MapPin, Loader } from 'lucide-react';
 import { getShopById, addToFavorites } from '../api/api';
-import { Shop, ApiResponse } from '../types/shop';
+import { Shop } from '../types/shop';
 import styles from './ShopDetail.module.css';
 
 const ShopDetail = () => {
@@ -17,7 +17,7 @@ const ShopDetail = () => {
       try {
         setLoading(true);
         setError(null);
-        const response: ApiResponse<Shop> = await getShopById(id!);
+        const response = await getShopById(id!);
         setShop(response.data);
       } catch (err) {
         setError('Failed to load coffee shop details. Please try again later.');
@@ -63,8 +63,8 @@ const ShopDetail = () => {
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
-        <img 
-          src={shop.photos[0] || 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&q=80&w=2940'} 
+        <img
+          src={shop.photos[0]}
           alt={shop.name}
           className={styles.heroImage}
         />
@@ -72,6 +72,7 @@ const ShopDetail = () => {
         <div className={styles.heroContent}>
           <h1 className={styles.name}>{shop.name}</h1>
           <p className={styles.address}>
+            <MapPin className="inline-block mr-2" size={16} />
             {shop.address}, {shop.city}, {shop.state}
           </p>
         </div>
@@ -113,10 +114,13 @@ const ShopDetail = () => {
             <h3 className={styles.sectionTitle}>Hours</h3>
             <div className={styles.hours}>
               {Object.entries(shop.hours).map(([day, hours]) => (
-                <React.Fragment key={day}>
+                <div key={day} className={styles.hourRow}>
                   <span className={styles.day}>{day}</span>
-                  <span>{hours}</span>
-                </React.Fragment>
+                  <span className={styles.time}>
+                    <Clock size={16} className="inline-block mr-2" />
+                    {hours}
+                  </span>
+                </div>
               ))}
             </div>
           </div>
@@ -124,13 +128,13 @@ const ShopDetail = () => {
           <div className={styles.infoCard}>
             <h3 className={styles.sectionTitle}>Contact</h3>
             {shop.contact.phone && (
-              <div className={styles.amenity}>
+              <div className={styles.contactItem}>
                 <Phone size={18} />
                 <span>{shop.contact.phone}</span>
               </div>
             )}
             {shop.contact.website && (
-              <div className={styles.amenity}>
+              <div className={styles.contactItem}>
                 <Globe size={18} />
                 <a href={shop.contact.website} target="_blank" rel="noopener noreferrer">
                   Visit Website
@@ -138,14 +142,14 @@ const ShopDetail = () => {
               </div>
             )}
             {shop.contact.email && (
-              <div className={styles.amenity}>
+              <div className={styles.contactItem}>
                 <Mail size={18} />
                 <a href={`mailto:${shop.contact.email}`}>{shop.contact.email}</a>
               </div>
             )}
           </div>
 
-          <button 
+          <button
             className={styles.favoriteButton}
             onClick={handleAddToFavorites}
             disabled={isFavoriting}

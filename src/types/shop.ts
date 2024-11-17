@@ -4,7 +4,6 @@ export interface Shop {
     address: string;
     city: string;
     state: string;
-    rating: number;
     description: string;
     hours: {
       [key: string]: string;

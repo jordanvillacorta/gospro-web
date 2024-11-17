@@ -7,7 +7,6 @@ export const mockShops: Shop[] = [
     address: '123 Coffee Street',
     city: 'Kansas City',
     state: 'MO',
-    rating: 4.8,
     description: 'A cozy coffee shop specializing in single-origin beans and pour-over brewing methods.',
     hours: {
       Monday: '7:00 AM - 6:00 PM',
@@ -34,7 +33,6 @@ export const mockShops: Shop[] = [
     address: '456 Science Ave',
     city: 'Kansas City',
     state: 'MO',
-    rating: 4.9,
     description: 'Experimental coffee shop pushing the boundaries of brewing techniques and flavor combinations.',
     hours: {
       Monday: '6:30 AM - 7:00 PM',
@@ -61,7 +59,6 @@ export const mockShops: Shop[] = [
     address: '789 Woodland Road',
     city: 'Kansas City',
     state: 'MO',
-    rating: 4.6,
     description: 'A charming cabin-style coffee shop offering comfort and warmth with every cup.',
     hours: {
       Monday: '8:00 AM - 5:00 PM',
@@ -88,7 +85,6 @@ export const mockShops: Shop[] = [
     address: '101 Tech Boulevard',
     city: 'Kansas City',
     state: 'MO',
-    rating: 4.7,
     description: 'Modern coffee shop catering to digital nomads and tech enthusiasts.',
     hours: {
       Monday: '24/7',
@@ -115,7 +111,6 @@ export const mockShops: Shop[] = [
     address: '303 Harbor View',
     city: 'Kansas City',
     state: 'MO',
-    rating: 4.5,
     description: 'Waterfront coffee shop offering spectacular views with your morning brew.',
     hours: {
       Monday: '6:00 AM - 6:00 PM',

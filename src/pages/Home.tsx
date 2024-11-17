@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Coffee } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
-import Navbar from '../components/Navbar';
 import ShopList from '../components/ShopList';
 import { searchShops } from '../api/api';
 import { Shop } from '../types/shop';
@@ -30,7 +29,6 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <Navbar />
       {!hasSearched ? (
         <main className={styles.main}>
           <div className={styles.backgroundImage} />
@@ -38,20 +36,20 @@ const Home = () => {
             <div className={styles.contentInner}>
               <div className={styles.titleContainer}>
                 <Coffee className="h-12 w-12" />
-                <h1 className={styles.title}>GO'SPRO</h1>
+                <h1 className={styles.title}>STARBREW CREW</h1>
               </div>
-              
+
               <h2 className={styles.subtitle}>
                 Find Local Craft Coffee Near You
               </h2>
-              
-              <SearchBar 
-                value={searchTerm} 
-                onChange={setSearchTerm} 
+
+              <SearchBar
+                value={searchTerm}
+                onChange={setSearchTerm}
                 onSearch={handleSearchClick}
                 isSearching={isSearching}
               />
-              
+
               <p className={styles.tagline}>
                 some espresso for my depresso
               </p>
@@ -61,9 +59,9 @@ const Home = () => {
       ) : (
         <div className={styles.resultsContainer}>
           <div className={styles.searchHeader}>
-            <SearchBar 
-              value={searchTerm} 
-              onChange={setSearchTerm} 
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
               onSearch={handleSearchClick}
               isSearching={isSearching}
             />
