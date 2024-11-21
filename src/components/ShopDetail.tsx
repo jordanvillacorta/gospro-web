@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Heart, Clock, Phone, Globe, Mail, Coffee, MapPin, Loader } from 'lucide-react';
-import { getShopById, addToFavorites } from '../api/api';
+import { getShopById, addToFavorites, removeFromFavorites, isFavorite } from '../api/api';
 import { Shop } from '../types/shop';
 import styles from './ShopDetail.module.css';
 
@@ -11,6 +11,7 @@ const ShopDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFavoriting, setIsFavoriting] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
 
   useEffect(() => {
     const fetchShop = async () => {
@@ -19,6 +20,8 @@ const ShopDetail = () => {
         setError(null);
         const response = await getShopById(id!);
         setShop(response.data);
+        const favoriteStatus = await isFavorite(id!);
+        setIsFavorited(favoriteStatus);
       } catch (err) {
         setError('Failed to load coffee shop details. Please try again later.');
       } finally {
@@ -31,13 +34,19 @@ const ShopDetail = () => {
     }
   }, [id]);
 
-  const handleAddToFavorites = async () => {
+  const handleFavoriteToggle = async () => {
+    if (!id) return;
+    
     try {
       setIsFavoriting(true);
-      await addToFavorites(id!);
-      // You might want to update some global state here to reflect the favorite status
+      if (isFavorited) {
+        await removeFromFavorites(id);
+      } else {
+        await addToFavorites(id);
+      }
+      setIsFavorited(!isFavorited);
     } catch (err) {
-      setError('Failed to add to favorites. Please try again.');
+      setError('Failed to update favorites. Please try again.');
     } finally {
       setIsFavoriting(false);
     }
@@ -63,8 +72,8 @@ const ShopDetail = () => {
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
-        <img
-          src={shop.photos[0]}
+        <img 
+          src={shop.photos[0]} 
           alt={shop.name}
           className={styles.heroImage}
         />
@@ -149,13 +158,18 @@ const ShopDetail = () => {
             )}
           </div>
 
-          <button
-            className={styles.favoriteButton}
-            onClick={handleAddToFavorites}
+          <button 
+            className={`${styles.favoriteButton} ${isFavorited ? styles.favorited : ''}`}
+            onClick={handleFavoriteToggle}
             disabled={isFavoriting}
           >
-            <Heart size={20} />
-            {isFavoriting ? 'Adding to Favorites...' : 'Add to Favorites'}
+            <Heart className={isFavorited ? 'fill-current' : ''} size={20} />
+            {isFavoriting 
+              ? 'Updating...' 
+              : isFavorited 
+                ? 'Remove from Favorites' 
+                : 'Add to Favorites'
+            }
           </button>
         </div>
       </div>

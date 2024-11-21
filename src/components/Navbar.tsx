@@ -1,9 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Coffee, User, Heart } from 'lucide-react';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
+  const location = useLocation();
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
@@ -13,9 +15,12 @@ const Navbar = () => {
             <span className={styles.brandText}>STARBREW CREW</span>
           </Link>
           <div className={styles.actions}>
-            <button className={styles.iconButton}>
+            <Link
+              to="/favorites"
+              className={`${styles.iconButton} ${location.pathname === '/favorites' ? styles.active : ''}`}
+            >
               <Heart className="h-6 w-6" />
-            </button>
+            </Link>
             <button className={styles.iconButton}>
               <User className="h-6 w-6" />
             </button>

@@ -62,9 +62,18 @@
   cursor: pointer;
   border: none;
   background: transparent;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .iconButton:hover {
+  color: #623b35;
+  background-color: rgba(98, 59, 53, 0.1);
+}
+
+.iconButton.active {
   color: #623b35;
   background-color: rgba(98, 59, 53, 0.1);
 }

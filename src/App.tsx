@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import ShopDetail from './components/ShopDetail';
+import Favorites from './pages/Favorites';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/shop/:id" element={<ShopDetail />} />
+            <Route path="/favorites" element={<Favorites />} />
           </Routes>
         </div>
       </div>
