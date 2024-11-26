@@ -17,6 +17,10 @@ export interface Shop {
     website?: string;
   };
   amenities: string[];
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 export interface ApiResponse<T> {

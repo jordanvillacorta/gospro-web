@@ -5,7 +5,7 @@
 
 .main {
   min-height: 100vh;
-  background: linear-gradient(135deg, #623b35 0%, #2a1a17 100%);
+  background: #0B0B1F;
   position: relative;
   overflow: hidden;
 }
@@ -28,7 +28,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  color: white;
+  color: #E8E8E8;
 }
 
 .contentInner {
@@ -50,7 +50,7 @@
   font-size: 4rem;
   font-weight: 800;
   letter-spacing: -0.025em;
-  background: linear-gradient(to right, #ffffff, #e2c9c5);
+  background: linear-gradient(to right, #E8E8E8, #808080);
   -webkit-background-clip: text;
   color: transparent;
 }
@@ -59,27 +59,38 @@
   font-size: 1.875rem;
   font-weight: 500;
   margin-bottom: 3rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: #E8E8E8;
 }
 
 .tagline {
   margin-top: 2rem;
   font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #39FF14;
   font-style: italic;
 }
 
 .resultsContainer {
+  padding-top: 4rem;
   min-height: 100vh;
-  background-color: #f8f7f6;
+  background-color: #0B0B1F;
 }
 
 .searchHeader {
-  background: linear-gradient(135deg, #623b35 0%, #2a1a17 100%);
+  background: #0B0B1F;
   padding: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.viewControls {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.results {
+  padding: 1rem 2rem;
 }
 
 @keyframes fadeIn {
@@ -104,6 +115,10 @@
   }
 
   .content {
+    padding: 1rem;
+  }
+
+  .results {
     padding: 1rem;
   }
 }
