@@ -32,7 +32,7 @@ export const searchShops = async (query: string): Promise<ApiResponse<Shop[]>> =
     // For development, filter mock data based on search query
     await new Promise(resolve => setTimeout(resolve, 1000));
     const searchTerm = query.toLowerCase();
-    const filteredShops = mockShops.filter(shop => 
+    const filteredShops = mockShops.filter(shop =>
       shop.name.toLowerCase().includes(searchTerm) ||
       shop.city.toLowerCase().includes(searchTerm) ||
       shop.description.toLowerCase().includes(searchTerm)
@@ -70,4 +70,15 @@ export const addToFavorites = async (id: string): Promise<void> => {
   } catch (error) {
     return handleApiError(error);
   }
+};
+
+export const removeFromFavorites = async (id: string): Promise<void> => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  // mockFavorites.delete(id);
+};
+
+// This is void for now
+export const isFavorite = async (id: string): Promise<void> => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  // return mockFavorites.has(id);
 };

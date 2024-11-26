@@ -20,8 +20,8 @@ const ShopDetail = () => {
         setError(null);
         const response = await getShopById(id!);
         setShop(response.data);
-        const favoriteStatus = await isFavorite(id!);
-        setIsFavorited(favoriteStatus);
+        // const favoriteStatus = await isFavorite(id!);
+        // setIsFavorited(favoriteStatus);
       } catch (err) {
         setError('Failed to load coffee shop details. Please try again later.');
       } finally {
@@ -36,7 +36,7 @@ const ShopDetail = () => {
 
   const handleFavoriteToggle = async () => {
     if (!id) return;
-    
+
     try {
       setIsFavoriting(true);
       if (isFavorited) {
@@ -72,8 +72,8 @@ const ShopDetail = () => {
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
-        <img 
-          src={shop.photos[0]} 
+        <img
+          src={shop.photos[0]}
           alt={shop.name}
           className={styles.heroImage}
         />
@@ -158,16 +158,16 @@ const ShopDetail = () => {
             )}
           </div>
 
-          <button 
+          <button
             className={`${styles.favoriteButton} ${isFavorited ? styles.favorited : ''}`}
             onClick={handleFavoriteToggle}
             disabled={isFavoriting}
           >
             <Heart className={isFavorited ? 'fill-current' : ''} size={20} />
-            {isFavoriting 
-              ? 'Updating...' 
-              : isFavorited 
-                ? 'Remove from Favorites' 
+            {isFavoriting
+              ? 'Updating...'
+              : isFavorited
+                ? 'Remove from Favorites'
                 : 'Add to Favorites'
             }
           </button>
