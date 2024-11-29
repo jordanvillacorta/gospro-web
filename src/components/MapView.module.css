@@ -1,0 +1,49 @@
+.mapContainer {
+  width: 100%;
+  height: calc(100vh - 12rem);
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid #808080;
+}
+
+.marker {
+  color: #808080;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.marker:hover,
+.marker.selected {
+  color: #39FF14;
+  transform: scale(1.2);
+}
+
+.popup {
+  background: #0B0B1F !important;
+  border: 1px solid #808080 !important;
+  border-radius: 0.5rem !important;
+  padding: 0 !important;
+}
+
+.popupContent {
+  padding: 1rem;
+  color: #E8E8E8;
+}
+
+.popupContent h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.popupContent p {
+  color: #808080;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.rating {
+  color: #39FF14 !important;
+  font-weight: 500;
+}
