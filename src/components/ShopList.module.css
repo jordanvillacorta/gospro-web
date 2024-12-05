@@ -1,0 +1,138 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  color: #39FF14;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.backButton:hover {
+  transform: translateX(-4px);
+}
+
+.shopCard {
+  background: #0B0B1F;
+  border: 1px solid #808080;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardContent {
+  display: flex;
+  cursor: pointer;
+  flex: 1;
+}
+
+.shopCard:hover,
+.shopCard.selected {
+  transform: translateY(-4px);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+  border-color: #39FF14;
+}
+
+.imageContainer {
+  width: 200px;
+  min-width: 200px;
+  height: auto;
+  overflow: hidden;
+}
+
+.shopImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.shopCard:hover .shopImage {
+  transform: scale(1.05);
+}
+
+.content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #E8E8E8;
+  margin-bottom: 0.5rem;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #808080;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.description {
+  color: #808080;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.detailsLink {
+  display: block;
+  text-align: center;
+  padding: 0.75rem;
+  background-color: rgba(57, 255, 20, 0.1);
+  color: #39FF14;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-top: 1px solid #808080;
+}
+
+.detailsLink:hover {
+  background-color: rgba(57, 255, 20, 0.2);
+}
+
+.noResults {
+  text-align: center;
+  padding: 4rem;
+  color: #808080;
+  font-size: 1.125rem;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0;
+  }
+
+  .cardContent {
+    flex-direction: column;
+  }
+
+  .imageContainer {
+    width: 100%;
+    height: 200px;
+  }
+}
