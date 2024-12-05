@@ -3,33 +3,32 @@ import { Rocket } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import ShopList from '../components/ShopList';
 import MapView from '../components/MapView';
-import ViewToggle from '../components/ViewToggle';
-import { searchShops } from '../api/api';
+import { useSearch } from '../hooks/useSearch';
 import { Shop } from '../types/shop';
 import styles from './Home.module.css';
 
 const Home = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-  const [shops, setShops] = useState<Shop[]>([]);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [view, setView] = useState<'map' | 'list'>('list');
+  const {
+    searchTerm,
+    setSearchTerm,
+    hasSearched,
+    isSearching,
+    searchResults,
+    handleSearchSubmit,
+    setSearchResults
+  } = useSearch();
+  
   const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
 
-  const handleSearchClick = async (query: string) => {
-    try {
-      setIsSearching(true);
-      const response = await searchShops(query);
-      if (response.data) {
-        setShops(response.data);
-        setHasSearched(true);
-      }
-    } catch (error) {
-      console.error('Search failed:', error);
-    } finally {
-      setIsSearching(false);
-    }
+  const handleShopSelect = (shop: Shop | null) => {
+    setSelectedShop(shop);
   };
+
+  const handleShopsUpdate = (newShops: Shop[]) => {
+    setSearchResults(newShops);
+  };
+
+  const displayedShops = selectedShop ? [selectedShop] : searchResults;
 
   return (
     <div className={styles.container}>
@@ -42,18 +41,18 @@ const Home = () => {
                 <Rocket className="h-12 w-12" />
                 <h1 className={styles.title}>STARBREW CREW</h1>
               </div>
-
+              
               <h2 className={styles.subtitle}>
                 Find Local Craft Coffee Near You
               </h2>
-
-              <SearchBar
-                value={searchTerm}
-                onChange={setSearchTerm}
-                onSearch={handleSearchClick}
+              
+              <SearchBar 
+                value={searchTerm} 
+                onChange={setSearchTerm} 
+                onSearch={handleSearchSubmit}
                 isSearching={isSearching}
               />
-
+              
               <p className={styles.tagline}>
                 some espresso for my depresso
               </p>
@@ -63,26 +62,31 @@ const Home = () => {
       ) : (
         <div className={styles.resultsContainer}>
           <div className={styles.searchHeader}>
-            <SearchBar
-              value={searchTerm}
-              onChange={setSearchTerm}
-              onSearch={handleSearchClick}
+            <SearchBar 
+              value={searchTerm} 
+              onChange={setSearchTerm} 
+              onSearch={handleSearchSubmit}
               isSearching={isSearching}
             />
           </div>
-          <div className={styles.viewControls}>
-            <ViewToggle view={view} onViewChange={setView} />
-          </div>
-          <div className={styles.results}>
-            {view === 'list' ? (
-              <ShopList shops={shops} />
-            ) : (
-              <MapView
-                shops={shops}
+          <div className={styles.resultsContent}>
+            <div className={styles.mapSection}>
+              <MapView 
+                shops={searchResults}
                 selectedShop={selectedShop}
-                onShopSelect={setSelectedShop}
+                onShopSelect={handleShopSelect}
+                onShopsUpdate={handleShopsUpdate}
               />
-            )}
+            </div>
+            <div className={styles.listSection}>
+              <ShopList 
+                shops={displayedShops}
+                selectedShopId={selectedShop?.id}
+                onShopSelect={handleShopSelect}
+                onClearSelection={() => setSelectedShop(null)}
+                showBackButton={!!selectedShop}
+              />
+            </div>
           </div>
         </div>
       )}

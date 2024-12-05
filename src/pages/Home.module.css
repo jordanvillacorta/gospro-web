@@ -9,7 +9,7 @@
   position: relative;
   overflow: hidden;
 }
-
+ 
 .backgroundImage {
   position: absolute;
   inset: 0;
@@ -81,16 +81,39 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  border-bottom: 1px solid #808080;
 }
 
-.viewControls {
+.resultsContent {
   display: flex;
-  justify-content: center;
-  padding: 1rem;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 4rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.results {
-  padding: 1rem 2rem;
+.mapSection {
+  height: 500px;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid #808080;
+  transition: border-color 0.2s ease;
+}
+
+.mapSection:hover {
+  border-color: #39FF14;
+}
+
+.listSection {
+  padding: 1rem 0;
 }
 
 @keyframes fadeIn {
@@ -98,27 +121,30 @@
     opacity: 0;
     transform: translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@media (max-width: 640px) {
-  .title {
-    font-size: 3rem;
-  }
-
-  .subtitle {
-    font-size: 1.5rem;
-  }
-
-  .content {
+@media (max-width: 1024px) {
+  .resultsContent {
     padding: 1rem;
   }
 
-  .results {
+  .mapSection {
+    height: 400px;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+  
+  .subtitle {
+    font-size: 1.5rem;
+  }
+  
+  .content {
     padding: 1rem;
   }
 }

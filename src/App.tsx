@@ -4,6 +4,9 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import ShopDetail from './components/ShopDetail';
 import Favorites from './pages/Favorites';
+import RequestCode from './components/auth/RequestCode';
+import VerifyCode from './components/auth/VerifyCode';
+import ProtectedResource from './components/auth/ProtectedResource';
 
 const App = () => {
   return (

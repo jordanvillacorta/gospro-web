@@ -5,18 +5,12 @@ export interface Shop {
   city: string;
   state: string;
   description: string;
-  hours: {
-    [key: string]: string;
-  };
   photos: string[];
-  specialties: string[];
-  priceRange: '$' | '$$' | '$$$' | '$$$$';
   contact: {
     phone?: string;
     email?: string;
     website?: string;
   };
-  amenities: string[];
   coordinates: {
     latitude: number;
     longitude: number;

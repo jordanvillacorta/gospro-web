@@ -24,7 +24,7 @@ const SearchBar = ({ value, onChange, onSearch, isSearching = false }: SearchBar
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Try searching your city..."
+          placeholder="Search a city!"
           className={styles.searchInput}
           disabled={isSearching}
         />
