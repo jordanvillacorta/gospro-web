@@ -1,61 +1,52 @@
 import axios from 'axios';
-import { Shop } from '../types/shop';
-import FRANCHISES from './franchises.json' assert { type: 'json' };
 
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-const MAPBOX_API_URL = 'https://api.mapbox.com';
-const MAX_RESULTS = 50;
-const SEARCH_RADIUS = 25000; // Increased from 10000 to 25000 meters (25km)
+const API_BASE_URL = import.meta.env.VITE_API_LOCAL_URL;
+const SEARCH_RADIUS = 25000; // 25km
 
-export interface MapboxLocation {
-  center: [number, number];
-  place_name: string;
-  context: Array<{
-    id: string;
-    text: string;
-  }>;
-}
-
-export interface MapboxPlace {
+interface Context { 
   id: string;
-  place_name: string;
-  center: [number, number];
-  properties: {
-    name: string;
-    address?: string;
-    category?: string;
-    phone?: string;
-  };
-  context: Array<{
-    id: string;
-    text: string;
-  }>;
+  text: string;
 }
 
-const isFranchise = (placeName: string): boolean => {
-  const normalizedName = placeName.toLowerCase();
-  return FRANCHISES.some(franchise => 
-    normalizedName.includes(franchise.toLowerCase())
-  );
-};
+interface Location {
+  center: [number, number];
+  place_name: string;
+  context: Context[];
+}
 
-export const searchLocation = async (
-  query: string
-): Promise<MapboxLocation[]> => {
+interface Coordinates {
+  longitude: number;
+  latitude: number;
+}
+
+interface Contact {
+  website: string;
+}
+
+interface Shop {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  description: string;
+  coordinates: Coordinates;
+  photos: string[];
+  contact: {
+    website?: string;
+  };
+}
+
+interface Franchises {
+  franchises: string[];
+}
+
+const searchLocation = async (query: string): Promise<Location[]> => {
   try {
-    const response = await axios.get(
-      `${MAPBOX_API_URL}/geocoding/v5/mapbox.places/${encodeURIComponent(
-        query
-      )}.json?access_token=${MAPBOX_TOKEN}&types=place,locality&limit=50`
+    const response = await axios.get<Location[]>(
+      `${API_BASE_URL}/api/locations/search?query=${encodeURIComponent(query)}`
     );
-
-    const locations = response.data.features.map((feature: any) => ({
-      center: feature.center,
-      place_name: feature.place_name,
-      context: feature.context || [],
-    }));
-
-    return locations;
+    return response.data;
   } catch (error) {
     console.error('Error searching location:', error);
     return [];
@@ -70,105 +61,56 @@ const getPhotoFromGooglePlaces = async (placeName: string, location: string): Pr
     'https://images.unsplash.com/photo-1559925393-8be0ec4767c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80',
     'https://images.unsplash.com/photo-1453614512568-c4024d13c247?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80'
   ];
-  
+
   const combinedString = `${placeName}-${location}`;
   const hash = Array.from(combinedString).reduce((acc, char) => {
     return char.charCodeAt(0) + ((acc << 5) - acc);
   }, 0);
-  
+
   const index = Math.abs(hash) % localCoffeeShopPhotos.length;
   return localCoffeeShopPhotos[index];
 };
 
-const transformMapboxPlaceToShop = async (place: any): Promise<Shop> => {
-  const name = place.text || place.place_name;
-  const city = place.context?.find((ctx: any) => ctx.id.startsWith('place'))?.text || '';
-  const state = place.context?.find((ctx: any) => ctx.id.startsWith('region'))?.text || '';
-  const location = `${city}, ${state}`;
-  
-  const photo = await getPhotoFromGooglePlaces(name, location);
-  
-  return {
-    id: place.id,
-    name,
-    address: place.properties?.address || place.place_name,
-    city,
-    state,
-    description: `Local coffee shop in ${city || 'the area'}`,
-    coordinates: {
-      longitude: place.center[0],
-      latitude: place.center[1],
-    },
-    photos: [photo],
-    contact: {
-      website: `https://maps.google.com/search?q=${encodeURIComponent(name + ' ' + location)}`,
-    }
-  };
-};
-
-export const searchNearbyShops = async (
+const searchNearbyShops = async (
   [longitude, latitude]: [number, number],
   radius: number = SEARCH_RADIUS
 ): Promise<Shop[]> => {
   try {
-    const response = await axios.get(
-      `${MAPBOX_API_URL}/geocoding/v5/mapbox.places/coffee.json?proximity=${longitude},${latitude}&access_token=${MAPBOX_TOKEN}&types=poi&limit=${MAX_RESULTS}&radius=${radius}`
+    const response = await axios.get<Shop[]>(
+      `${API_BASE_URL}/api/shops/nearby?longitude=${longitude}&latitude=${latitude}&radius=${radius}`
     );
-
-    const nonFranchiseShops = response.data.features.filter(
-      (place: any) => !isFranchise(place.text)
-    );
-
-    const shopPromises = nonFranchiseShops.map(transformMapboxPlaceToShop);
-    const shops = await Promise.all(shopPromises);
-
-    return shops;
+    return response.data;
   } catch (error) {
     console.error('Error searching nearby shops:', error);
     return [];
   }
 };
 
-export const getPlaceById = async (id: string): Promise<Shop | null> => {
+const getPlaceById = async (id: string): Promise<Shop | null> => {
   try {
-    const response = await axios.get(
-      `${MAPBOX_API_URL}/geocoding/v5/mapbox.places/${id}.json?access_token=${MAPBOX_TOKEN}`
-    );
-
-    if (response.data.features && response.data.features.length > 0) {
-      const place = response.data.features[0];
-      return await transformMapboxPlaceToShop(place);
-    }
-    return null;
+    const response = await axios.get<Shop>(`${API_BASE_URL}/api/shops/${id}`);
+    return response.data;
   } catch (error) {
     console.error('Error getting place by ID:', error);
     return null;
   }
 };
 
-export const getLocationCoordinates = async (
-  address: string
-): Promise<[number, number] | null> => {
+const getLocationCoordinates = async (address: string): Promise<[number, number] | null> => {
   try {
-    const response = await axios.get(
-      `${MAPBOX_API_URL}/geocoding/v5/mapbox.places/${encodeURIComponent(
-        address
-      )}.json?access_token=${MAPBOX_TOKEN}&limit=1`
+    const response = await axios.get<{ coordinates: [number, number] }>(
+      `${API_BASE_URL}/api/locations/coordinates?address=${encodeURIComponent(address)}`
     );
-
-    if (response.data.features && response.data.features.length > 0) {
-      return response.data.features[0].center;
-    }
-    return null;
+    return response.data.coordinates;
   } catch (error) {
     console.error('Error getting coordinates:', error);
     return null;
   }
 };
 
-export const getBoundingBox = (
+const getBoundingBox = (
   coordinates: [number, number][],
-  padding = 50
+  padding: number = 50
 ): [[number, number], [number, number]] => {
   const bounds = coordinates.reduce(
     (bounds, coord) => {
@@ -190,4 +132,16 @@ export const getBoundingBox = (
     [bounds[0][0] - paddingLng, bounds[0][1] - paddingLat],
     [bounds[1][0] + paddingLng, bounds[1][1] + paddingLat],
   ];
+};
+
+export {
+  searchLocation,
+  searchNearbyShops,
+  getPlaceById,
+  getLocationCoordinates,
+  getBoundingBox,
+  type Shop,
+  type Location,
+  type Coordinates,
+  type Contact
 };

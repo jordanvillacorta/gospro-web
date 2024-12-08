@@ -4,20 +4,32 @@ import { searchLocation, searchNearbyShops, getPlaceById } from '../services/map
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const searchShops = async (query: string): Promise<ApiResponse<Shop[]>> => {
+interface EnrichedSearchResult {
+  coffeeShops: Shop[];
+  insights: Array<{
+    name: string;
+    rank: number;
+    explanation: string;
+  }>;
+}
+
+export const searchShops = async (query: string): Promise<ApiResponse<EnrichedSearchResult>> => {
   try {
-    // First, get the location coordinates from Mapbox
     const locations = await searchLocation(query);
     if (locations.length > 0) {
       const location = locations[0];
-      
-      // Search for coffee shops near the selected location
+
       const shops = await searchNearbyShops(location.center);
-      return { data: shops };
+
+      const response = await axios.post(`${API_URL}/shops/analyze`, {
+        shops,
+        preferences: "Looking for the best coffee shops with great atmosphere and quality beans"
+      });
+
+      return response.data;
     }
-    return { data: [] };
+    return { data: { coffeeShops: [], insights: [] } };
   } catch (error) {
-    console.error('Error searching shops:', error);
     throw new Error('Failed to fetch shops');
   }
 };
@@ -69,7 +81,7 @@ export const removeFromFavorites = async (id: string): Promise<void> => {
 export const getFavorites = async (): Promise<ApiResponse<Shop[]>> => {
   const favorites = getFavoriteIds();
   const favoriteShops: Shop[] = [];
-  
+
   for (const id of favorites) {
     try {
       const { data: shop } = await getShopById(id);
@@ -78,7 +90,7 @@ export const getFavorites = async (): Promise<ApiResponse<Shop[]>> => {
       console.error(`Failed to fetch favorite shop ${id}:`, error);
     }
   }
-  
+
   return { data: favoriteShops };
 };
 
