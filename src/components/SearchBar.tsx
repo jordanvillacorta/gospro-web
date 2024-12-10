@@ -28,8 +28,8 @@ const SearchBar = ({ value, onChange, onSearch, isSearching = false }: SearchBar
           className={styles.searchInput}
           disabled={isSearching}
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className={styles.searchButton}
           disabled={isSearching || !value.trim()}
         >

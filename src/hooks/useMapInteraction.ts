@@ -4,21 +4,22 @@ import { searchNearbyShops } from '../services/mapboxService';
 import { Shop } from '../types/shop';
 
 export const useMapInteraction = () => {
-  const [viewState, setViewState] = useState<Partial<ViewState>>({});
   const [mapMoved, setMapMoved] = useState(false);
   const [isSearchingArea, setIsSearchingArea] = useState(false);
 
-  const handleMapMove = useCallback(({ viewState }: { viewState: ViewState }) => {
-    setViewState(viewState);
-    setMapMoved(true);
+  const handleMapMove = useCallback((evt: { viewState: ViewState }) => {
+    const { viewState } = evt;
+    if (viewState.longitude && viewState.latitude) {
+      setMapMoved(true);
+    }
   }, []);
 
-  const handleSearchArea = useCallback(async () => {
-    if (!viewState.longitude || !viewState.latitude) return [];
+  const handleSearchArea = useCallback(async (viewport: ViewState) => {
+    if (!viewport.longitude || !viewport.latitude) return [];
     
     setIsSearchingArea(true);
     try {
-      const shops = await searchNearbyShops([viewState.longitude, viewState.latitude]);
+      const shops = await searchNearbyShops([viewport.longitude, viewport.latitude]);
       setMapMoved(false);
       return shops;
     } catch (error) {
@@ -27,14 +28,13 @@ export const useMapInteraction = () => {
     } finally {
       setIsSearchingArea(false);
     }
-  }, [viewState]);
+  }, []);
 
   const resetMapMoved = useCallback(() => {
     setMapMoved(false);
   }, []);
 
   return {
-    viewState,
     mapMoved,
     isSearchingArea,
     handleMapMove,
