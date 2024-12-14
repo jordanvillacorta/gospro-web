@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Loader } from 'lucide-react';
+import { Search, Orbit, Telescope } from 'lucide-react';
 import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
@@ -28,15 +28,15 @@ const SearchBar = ({ value, onChange, onSearch, isSearching = false }: SearchBar
           className={styles.searchInput}
           disabled={isSearching}
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className={styles.searchButton}
           disabled={isSearching || !value.trim()}
         >
           {isSearching ? (
-            <Loader className="h-6 w-6 text-white animate-spin" />
+            <Orbit className="h-6 w-6 text-white animate-spin" />
           ) : (
-            <Search className="h-6 w-6 text-white" />
+            <Telescope className="h-6 w-6 text-white" />
           )}
         </button>
       </div>

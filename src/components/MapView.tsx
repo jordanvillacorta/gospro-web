@@ -1,12 +1,11 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
 import Map, { Marker, Popup, ViewState } from 'react-map-gl';
-import { MapPin, Navigation } from 'lucide-react';
+import { ArrowBigLeft, Navigation } from 'lucide-react';
 import { Shop } from '../types/shop';
 import { getBoundingBox } from '../services/mapboxService';
 import { getDirectionsUrl } from '../utils/navigation';
 import { useMapInteraction } from '../hooks/useMapInteraction';
 import MapMarker from './MapMarker';
-import SearchAreaButton from './SearchAreaButton';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import styles from './MapView.module.css';
 
@@ -17,15 +16,20 @@ interface MapViewProps {
   onShopsUpdate?: (shops: Shop[]) => void;
 }
 
-const MapView: React.FC<MapViewProps> = ({ 
-  shops = [], 
-  selectedShop, 
+const MapView: React.FC<MapViewProps> = ({
+  shops = [],
+  selectedShop,
   onShopSelect,
-  onShopsUpdate 
+  onShopsUpdate
 }) => {
   const mapRef = useRef<any>(null);
+  const [viewport, setViewport] = useState({
+    longitude: -94.5786,
+    latitude: 39.0997,
+    zoom: 13
+  });
+
   const {
-    viewState,
     mapMoved,
     isSearchingArea,
     handleMapMove,
@@ -42,29 +46,52 @@ const MapView: React.FC<MapViewProps> = ({
     shop.coordinates.latitude
   ]);
 
-  const defaultViewport = {
-    longitude: -94.5786,
-    latitude: 39.0997,
-    zoom: 12
-  };
-
-  const bounds = coordinates.length > 0 ? getBoundingBox(coordinates) : null;
-
   const handleGetDirections = (shop: Shop) => {
     const fullAddress = `${shop.name}, ${shop.address}, ${shop.city}, ${shop.state}`;
     window.open(getDirectionsUrl(fullAddress), '_blank');
   };
 
   const handleSearchThisArea = async () => {
-    const newShops = await handleSearchArea();
+    const newShops = await handleSearchArea(viewport);
     if (onShopsUpdate) {
       onShopsUpdate(newShops);
     }
   };
 
+  useEffect(() => {
+    if (shops.length > 0) {
+      const firstShop = shops[0];
+      if (firstShop.coordinates) {
+        const newViewport = {
+          longitude: firstShop.coordinates.longitude,
+          latitude: firstShop.coordinates.latitude,
+          zoom: 11
+        };
+
+        setViewport(newViewport);
+
+        if (mapRef.current) {
+          mapRef.current?.flyTo({
+            center: [firstShop.coordinates.longitude, firstShop.coordinates.latitude],
+            zoom: 11,
+            duration: 2000,
+            essential: true
+          });
+        }
+      }
+    }
+  }, [shops]); // Run whenever shops array changes
+
   const focusOnShop = useCallback((shop: Shop) => {
     if (!mapRef.current) return;
 
+    const newViewport = {
+      longitude: shop.coordinates.longitude,
+      latitude: shop.coordinates.latitude,
+      zoom: 15
+    };
+
+    setViewport(newViewport);
     mapRef.current.flyTo({
       center: [shop.coordinates.longitude, shop.coordinates.latitude],
       zoom: 15,
@@ -74,22 +101,51 @@ const MapView: React.FC<MapViewProps> = ({
     resetMapMoved();
   }, [resetMapMoved]);
 
+  const handleBackToResults = useCallback(() => {
+    if (!mapRef.current) return;
+
+    const newViewport = {
+      ...viewport,
+      zoom: 11  // Zoom out to a level that shows the search area
+    };
+
+    setViewport(newViewport);
+    mapRef.current.flyTo({
+      center: [viewport.longitude, viewport.latitude],
+      zoom: 11,
+      duration: 1000,
+      essential: true
+    });
+    resetMapMoved();
+  }, [viewport, resetMapMoved]);
+
   useEffect(() => {
-    if (selectedShop) {
+    if (selectedShop?.coordinates) {
       focusOnShop(selectedShop);
     }
   }, [selectedShop, focusOnShop]);
 
   return (
     <div className={styles.mapContainer}>
+      {!selectedShop && viewport.zoom > 11 && (  // Show button when zoomed in closer than 11
+        <button
+          onClick={handleBackToResults}
+          className={styles.backButton}
+        >
+          <ArrowBigLeft />
+          Back to search results
+        </button>
+      )}
       <Map
         ref={mapRef}
         mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
-        initialViewState={defaultViewport}
+        {...viewport}
         style={{ width: '100%', height: '100%' }}
         mapStyle="mapbox://styles/mapbox/dark-v11"
-        bounds={bounds}
-        onMove={handleMapMove}
+        onMove={evt => {
+          setViewport(evt.viewState);
+          handleMapMove(evt);
+        }}
         reuseMaps
       >
         {shopsWithCoordinates.map((shop) => (
@@ -103,7 +159,7 @@ const MapView: React.FC<MapViewProps> = ({
               onShopSelect(shop);
             }}
           >
-            <MapMarker 
+            <MapMarker
               shop={shop}
               isSelected={selectedShop?.id === shop.id}
               onClick={() => onShopSelect(shop)}
@@ -133,13 +189,6 @@ const MapView: React.FC<MapViewProps> = ({
               </button>
             </div>
           </Popup>
-        )}
-
-        {mapMoved && (
-          <SearchAreaButton 
-            onClick={handleSearchThisArea}
-            isSearching={isSearchingArea}
-          />
         )}
       </Map>
     </div>

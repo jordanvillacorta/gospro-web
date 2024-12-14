@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Heart, Globe, Mail, MapPin, Loader } from 'lucide-react';
+import { Globe, Mail, MapPin, Orbit, Stars } from 'lucide-react';
 import {
   getShopById,
   addToFavorites,
@@ -63,7 +63,7 @@ const ShopDetail = () => {
   if (loading) {
     return (
       <div className={styles.loading}>
-        <Loader className={styles.loadingSpinner} size={32} />
+        <Orbit className={styles.loadingSpinner} size={32} />
       </div>
     );
   }
@@ -131,18 +131,17 @@ const ShopDetail = () => {
           </div>
 
           <button
-            className={`${styles.favoriteButton} ${
-              isFavorited ? styles.favorited : ''
-            } ${isAnimating ? styles.animate : ''}`}
+            className={`${styles.favoriteButton} ${isFavorited ? styles.favorited : ''
+              } ${isAnimating ? styles.animate : ''}`}
             onClick={handleFavoriteToggle}
             disabled={isFavoriting}
           >
-            <Heart className={isFavorited ? 'fill-current' : ''} size={20} />
+            <Stars className={isFavorited ? 'fill-current' : ''} size={20} />
             {isFavoriting
               ? 'Updating...'
               : isFavorited
-              ? 'Remove from Favorites'
-              : 'Add to Favorites'}
+                ? 'Remove from Favorites'
+                : 'Add to Favorites'}
           </button>
         </div>
       </div>

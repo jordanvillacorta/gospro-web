@@ -65,10 +65,10 @@
 }
 
 .content {
-  padding: 1.5rem;
-  flex: 1;
+  margin-left: 16px;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .name {
@@ -88,15 +88,8 @@
 }
 
 .description {
-  color: #808080;
-  font-size: 0.875rem;
-  line-height: 1.5;
   margin-bottom: 1rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  flex: 1;
+  flex-grow: 1;
 }
 
 .detailsLink {
@@ -135,4 +128,37 @@
     width: 100%;
     height: 200px;
   }
+}
+
+.headerSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.rankBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgba(57, 255, 20, 0.1);
+  color: #39FF14;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.insightContainer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.insight {
+  color: #39FF14;
+  font-size: 0.875rem;
+  font-style: italic;
+  line-height: 1.5;
 }
