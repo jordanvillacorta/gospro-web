@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getFavorites } from '../api/api';
 import ShopList from '../components/ShopList';
-import { Loader } from 'lucide-react';
+import { Orbit } from 'lucide-react';
 import { Shop } from '../types/shop';
 import styles from './Favorites.module.css';
 
@@ -29,7 +29,7 @@ const Favorites = () => {
   if (loading) {
     return (
       <div className={styles.loading}>
-        <Loader className="animate-spin" size={32} />
+        <Orbit className="animate-spin" size={32} />
       </div>
     );
   }
@@ -52,7 +52,13 @@ const Favorites = () => {
           <p>You haven't added any coffee shops to your favorites yet.</p>
         </div>
       ) : (
-        <ShopList shops={favorites} />
+        <ShopList
+          shops={favorites}
+          selectedShopId={""}
+          onShopSelect={() => {}}
+          onClearSelection={() => {}}
+          showBackButton={false}
+        />
       )}
     </div>
   );

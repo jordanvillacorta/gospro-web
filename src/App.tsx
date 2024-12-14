@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { initializePlatform } from './services/platform';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import ShopDetail from './components/ShopDetail';
 import Favorites from './pages/Favorites';
-import LoginModal from './components/auth/LoginModal';
+import ShopDetail from './components/ShopDetail';
 
 const App = () => {
   useEffect(() => {
@@ -18,9 +17,10 @@ const App = () => {
         <Navbar />
         <div className="pt-16">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/shop/:id" element={<ShopDetail />} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/shop/:id" element={<ShopDetail />} />
           </Routes>
         </div>
       </div>

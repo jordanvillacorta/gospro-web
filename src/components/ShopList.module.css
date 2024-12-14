@@ -65,6 +65,7 @@
 }
 
 .content {
+  margin-left: 16px;
   display: flex;
   flex-direction: column;
   height: 100%;

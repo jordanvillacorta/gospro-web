@@ -23,7 +23,7 @@ interface Contact {
   website: string;
 }
 
-interface Shop {
+export interface Shop {
   id: string;
   name: string;
   address: string;

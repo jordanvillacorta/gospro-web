@@ -6,6 +6,7 @@ import MapView from '../components/MapView';
 import { useSearch } from '../hooks/useSearch';
 import { Shop } from '../types/shop';
 import styles from './Home.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const {
@@ -19,6 +20,7 @@ const Home = () => {
   } = useSearch();
   
   const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
+  const navigate = useNavigate();
 
   const handleShopSelect = (shop: Shop | null) => {
     setSelectedShop(shop);
@@ -26,6 +28,10 @@ const Home = () => {
 
   const handleShopsUpdate = (newShops: Shop[]) => {
     setSearchResults(newShops);
+  };
+
+  const handleViewAllShops = () => {
+    navigate('/shoplist', { state: { shops: searchResults } });
   };
 
   const displayedShops = selectedShop ? [selectedShop] : searchResults;
