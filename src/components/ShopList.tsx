@@ -87,7 +87,7 @@ const ShopList: React.FC<ShopListProps> = ({
                 
                 <div className={styles.location}>
                   <MapPin size={16} />
-                  <span>{shop.city}, {shop.state}</span>
+                  <span>{shop.address}, {shop.city}, {shop.state}</span>
                 </div>
 
                 <p className={styles.description}>{shop.description}</p>

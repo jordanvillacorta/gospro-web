@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin } from 'lucide-react';
+import { Coffee } from 'lucide-react';
 import { Shop } from '../types/shop';
 import styles from './MapView.module.css';
 
@@ -11,11 +11,11 @@ interface MapMarkerProps {
 
 const MapMarker: React.FC<MapMarkerProps> = ({ shop, isSelected, onClick }) => {
   return (
-    <div 
+    <div
       className={`${styles.marker} ${isSelected ? styles.selected : ''}`}
       onClick={onClick}
     >
-      <MapPin size={24} />
+      <Coffee size={24} />
     </div>
   );
 };

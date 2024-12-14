@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
 import Map, { Marker, Popup, ViewState } from 'react-map-gl';
-import { MapPin, Navigation } from 'lucide-react';
+import { ArrowBigLeft, Navigation } from 'lucide-react';
 import { Shop } from '../types/shop';
 import { getBoundingBox } from '../services/mapboxService';
 import { getDirectionsUrl } from '../utils/navigation';
@@ -103,7 +103,7 @@ const MapView: React.FC<MapViewProps> = ({
 
   const handleBackToResults = useCallback(() => {
     if (!mapRef.current) return;
-    
+
     const newViewport = {
       ...viewport,
       zoom: 11  // Zoom out to a level that shows the search area
@@ -128,10 +128,11 @@ const MapView: React.FC<MapViewProps> = ({
   return (
     <div className={styles.mapContainer}>
       {!selectedShop && viewport.zoom > 11 && (  // Show button when zoomed in closer than 11
-        <button 
+        <button
           onClick={handleBackToResults}
           className={styles.backButton}
         >
+          <ArrowBigLeft />
           Back to search results
         </button>
       )}
