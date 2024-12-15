@@ -34,7 +34,6 @@ const MapView: React.FC<MapViewProps> = ({
     isSearchingArea,
     handleMapMove,
     handleSearchArea,
-    resetMapMoved
   } = useMapInteraction();
 
   const shopsWithCoordinates = shops.filter(
@@ -51,15 +50,15 @@ const MapView: React.FC<MapViewProps> = ({
     window.open(getDirectionsUrl(fullAddress), '_blank');
   };
 
-  const handleSearchThisArea = async () => {
-    const newShops = await handleSearchArea(viewport);
+  const handleSearchThisAreaAndUpdate = async () => {
+    const { shops: newShops } = await handleSearchArea(viewport, false);
     if (onShopsUpdate) {
       onShopsUpdate(newShops);
     }
   };
 
   useEffect(() => {
-    if (shops.length > 0) {
+    if (shops.length > 0 && !mapRef.current) {
       const firstShop = shops[0];
       if (firstShop.coordinates) {
         const newViewport = {
@@ -69,18 +68,9 @@ const MapView: React.FC<MapViewProps> = ({
         };
 
         setViewport(newViewport);
-
-        if (mapRef.current) {
-          mapRef.current?.flyTo({
-            center: [firstShop.coordinates.longitude, firstShop.coordinates.latitude],
-            zoom: 11,
-            duration: 2000,
-            essential: true
-          });
-        }
       }
     }
-  }, [shops]); // Run whenever shops array changes
+  }, [shops]);
 
   const focusOnShop = useCallback((shop: Shop) => {
     if (!mapRef.current) return;
@@ -98,8 +88,7 @@ const MapView: React.FC<MapViewProps> = ({
       duration: 1000,
       essential: true
     });
-    resetMapMoved();
-  }, [resetMapMoved]);
+  }, []);
 
   const handleBackToResults = useCallback(() => {
     if (!mapRef.current) return;
@@ -116,8 +105,7 @@ const MapView: React.FC<MapViewProps> = ({
       duration: 1000,
       essential: true
     });
-    resetMapMoved();
-  }, [viewport, resetMapMoved]);
+  }, [viewport]);
 
   useEffect(() => {
     if (selectedShop?.coordinates) {
@@ -125,9 +113,29 @@ const MapView: React.FC<MapViewProps> = ({
     }
   }, [selectedShop, focusOnShop]);
 
+  const handleMapMovement = (evt) => {
+    setViewport(evt.viewState);
+    handleMapMove(evt);
+  };
+
+  const renderSearchAreaButton = () => {
+    const shouldShow = mapMoved && !isSearchingArea && !selectedShop;
+    
+    if (!shouldShow) return null;
+    
+    return (
+      <button 
+        className={styles.searchAreaButton}
+        onClick={handleSearchThisAreaAndUpdate}
+      >
+        Search This Area
+      </button>
+    );
+  };
+
   return (
     <div className={styles.mapContainer}>
-      {!selectedShop && viewport.zoom > 11 && (  // Show button when zoomed in closer than 11
+      {!selectedShop && viewport.zoom > 11 && (
         <button
           onClick={handleBackToResults}
           className={styles.backButton}
@@ -144,7 +152,7 @@ const MapView: React.FC<MapViewProps> = ({
         mapStyle="mapbox://styles/mapbox/dark-v11"
         onMove={evt => {
           setViewport(evt.viewState);
-          handleMapMove(evt);
+          handleMapMovement(evt);
         }}
         reuseMaps
       >
@@ -191,6 +199,7 @@ const MapView: React.FC<MapViewProps> = ({
           </Popup>
         )}
       </Map>
+      {renderSearchAreaButton()}
     </div>
   );
 };
