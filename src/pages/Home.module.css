@@ -9,7 +9,7 @@
   position: relative;
   overflow: hidden;
 }
- 
+
 .backgroundImage {
   position: absolute;
   inset: 0;
@@ -121,6 +121,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -139,11 +140,11 @@
   .title {
     font-size: 3rem;
   }
-  
+
   .subtitle {
     font-size: 1.5rem;
   }
-  
+
   .content {
     padding: 1rem;
   }

@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.starbrew.crew',
-  appName: 'Starbrew Crew',
+  appId: 'com.brewstronomy.app',
+  appName: 'Brewstronomy',
   webDir: 'dist',
   server: {
     androidScheme: 'https',

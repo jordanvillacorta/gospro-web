@@ -45,7 +45,7 @@ const Home = () => {
             <div className={styles.contentInner}>
               <div className={styles.titleContainer}>
                 <Rocket className="h-12 w-12" />
-                <h1 className={styles.title}>STARBREW CREW</h1>
+                <h1 className={styles.title}>BREWSTRONOMY</h1>
               </div>
               
               <h2 className={styles.subtitle}>
@@ -72,7 +72,7 @@ const Home = () => {
               value={searchTerm} 
               onChange={setSearchTerm} 
               onSearch={handleSearchSubmit}
-              isSearching={isSearching}
+              isSearching={isSearching} 
             />
           </div>
           <div className={styles.resultsContent}>

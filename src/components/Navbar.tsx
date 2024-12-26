@@ -15,7 +15,7 @@ const Navbar = () => {
             className={`${styles.brand} ${location.pathname === '/home' ? styles.active : ''}`}
           >
             <Rocket className="h-8 w-8" style={{ color: '#39FF14' }} />
-            <span className={styles.brandText}>STARBREW CREW</span>
+            <span className={styles.brandText}>BREWSTRONOMY</span>
           </Link>
           <div className={styles.actions}>
             <Link
