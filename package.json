@@ -1,5 +1,5 @@
 {
-  "name": "starbrew-crew",
+  "name": "brewstronomy",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "cap:init": "cap init StarbewCrew com.starbrew.crew",
+    "cap:init": "cap init Brewstronomy com.brewstronomy.app",
     "cap:add": "cap add ios",
     "cap:sync": "cap sync",
     "cap:open": "cap open ios"
